@@ -5,7 +5,12 @@ import 'package:u02_challenge/answer_button.dart';
 import 'package:u02_challenge/data/questions.dart';
 
 class QuestionsScreen extends StatefulWidget {
-  const QuestionsScreen({super.key});
+  const QuestionsScreen({
+    super.key,
+    required this.onSelectAnswer,
+  });
+
+  final void Function(String answer) onSelectAnswer;
 
   @override
   State<QuestionsScreen> createState() {
@@ -16,7 +21,8 @@ class QuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<QuestionsScreen> {
   var currentQuestionIndex = 0;
 
-  void answerQuestion() {
+  void answerQuestion(String answer) {
+    widget.onSelectAnswer(answer);
     setState(() {
       currentQuestionIndex++;
     });
@@ -36,7 +42,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           children: [
             Text(
               currentQuestion.questionText,
-              style: const TextStyle(fontSize: 24, color: Colors.white),
+              style: GoogleFonts.nunito(fontSize: 24, color: Colors.white),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 50),
@@ -45,7 +51,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: AnswerButton(
                   answerText: answer,
-                  onTap: answerQuestion,
+                  onTap: () {
+                    answerQuestion(answer);
+                  },
                 ),
               );
             }),
