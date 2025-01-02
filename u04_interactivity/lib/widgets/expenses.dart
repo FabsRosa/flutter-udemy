@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:u04_interactivity/models/expense.dart';
-import 'package:u04_interactivity/expenses_list.dart';
+import 'package:u04_interactivity/widgets/expenses_list/expenses_list.dart';
 
 class Expenses extends StatefulWidget {
   const Expenses({super.key});
@@ -51,7 +51,9 @@ class _ExpensesState extends State<Expenses> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          ExpensesList(expenses: _expenses)
+          Expanded(
+            child: ExpensesList(expenses: _expenses),
+          )
         ],
       ),
     );
