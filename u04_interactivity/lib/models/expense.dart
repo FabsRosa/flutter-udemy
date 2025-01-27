@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:intl/intl.dart';
 
 const uuid = Uuid();
 
@@ -32,6 +33,6 @@ class Expense {
   final Category category;
 
   String get formattedDate {
-    return '${date.day.toString()}/${date.month.toString()}/${date.year}';
+    return DateFormat('dd/MM/yyyy').format(date);
   }
 }
