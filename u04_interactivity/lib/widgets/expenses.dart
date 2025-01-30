@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:u04_interactivity/models/expense.dart';
+import 'package:u04_interactivity/widgets/chart/chart.dart';
 import 'package:u04_interactivity/widgets/expenses_list/expenses_list.dart';
 import 'package:u04_interactivity/widgets/new_expense.dart';
 
@@ -33,8 +34,8 @@ class _ExpensesState extends State<Expenses> {
       category: Category.leisure,
     ),
     Expense(
-      title: 'Laptop',
-      amount: 1000.0,
+      title: 'Bag',
+      amount: 80.0,
       date: DateTime.now(),
       category: Category.work,
     ),
@@ -42,6 +43,7 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
       builder: (ctx) {
@@ -80,7 +82,9 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
-    Widget mainContent = const Center(
+    final width = MediaQuery.of(context).size.width;
+
+    Widget cardContent = const Center(
       child: Text(
         'No expenses found. Start adding some!',
         style: TextStyle(fontSize: 16),
@@ -88,7 +92,7 @@ class _ExpensesState extends State<Expenses> {
     );
 
     if (_expenses.isNotEmpty) {
-      mainContent = ExpensesList(
+      cardContent = ExpensesList(
         expenses: _expenses,
         onRemoveExpense: _removeExpense,
       );
@@ -104,18 +108,19 @@ class _ExpensesState extends State<Expenses> {
         ],
         title: const Text('Expense Tracker'),
       ),
-      body: Column(
-        children: [
-          Text(
-            'The chart will be here',
-            style: GoogleFonts.nunito(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _expenses),
+                Expanded(child: cardContent),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: Chart(expenses: _expenses)),
+                Expanded(child: cardContent),
+              ],
             ),
-          ),
-          Expanded(child: mainContent)
-        ],
-      ),
     );
   }
 }

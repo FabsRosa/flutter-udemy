@@ -35,7 +35,6 @@ class ExpenseItem extends StatelessWidget {
                   '\$${expense.amount.toStringAsFixed(2)}',
                   style: GoogleFonts.nunito(
                     fontSize: 16,
-                    color: Colors.grey,
                   ),
                 ),
                 const Spacer(),
@@ -47,7 +46,6 @@ class ExpenseItem extends StatelessWidget {
                       expense.formattedDate,
                       style: GoogleFonts.nunito(
                         fontSize: 16,
-                        color: Colors.grey,
                       ),
                     )
                   ],
