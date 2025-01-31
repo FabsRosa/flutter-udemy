@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:u04_interactivity/models/expense.dart';
 import 'package:u04_interactivity/widgets/chart/chart.dart';
