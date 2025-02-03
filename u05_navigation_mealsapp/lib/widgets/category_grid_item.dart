@@ -23,11 +23,10 @@ class CategoryGridItem extends StatelessWidget {
         category: category,
       ),
       splashColor: Theme.of(context).primaryColor,
-      borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(8),
           gradient: LinearGradient(
             colors: [
               category.color.withValues(alpha: 0.55),

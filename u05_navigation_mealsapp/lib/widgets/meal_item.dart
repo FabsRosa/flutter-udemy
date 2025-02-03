@@ -2,26 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'package:u05_navigation_mealsapp/models/meal.dart';
+import 'package:u05_navigation_mealsapp/widgets/meal_item_trait.dart';
 
 class MealItem extends StatelessWidget {
   const MealItem({
     super.key,
     required this.meal,
+    required this.onSelectMeal,
   });
 
   final Meal meal;
+  final Function({
+    required BuildContext context,
+    required Meal meal,
+  }) onSelectMeal;
+
+  String get complexityText {
+    return meal.complexity.name[0].toUpperCase() +
+        meal.complexity.name.substring(1);
+  }
+
+  String get affordabilityText {
+    return meal.affordability.name[0].toUpperCase() +
+        meal.affordability.name.substring(1);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      clipBehavior: Clip.hardEdge,
+      clipBehavior: Clip.antiAlias,
       elevation: 2,
       child: InkWell(
-        onTap: () {},
+        onTap: () => onSelectMeal(
+          context: context,
+          meal: meal,
+        ),
         child: Stack(
           children: [
             FadeInImage(
@@ -59,7 +78,22 @@ class MealItem extends StatelessWidget {
                       height: 12,
                     ),
                     Row(
-                      children: [],
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MealItemTrait(
+                            icon: Icons.schedule,
+                            label: '${meal.duration} min'),
+                        const SizedBox(width: 16),
+                        MealItemTrait(
+                          icon: Icons.bar_chart,
+                          label: complexityText,
+                        ),
+                        const SizedBox(width: 16),
+                        MealItemTrait(
+                          icon: Icons.local_offer,
+                          label: affordabilityText,
+                        ),
+                      ],
                     ),
                   ],
                 ),
