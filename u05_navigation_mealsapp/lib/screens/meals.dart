@@ -9,10 +9,12 @@ class MealsScreen extends StatelessWidget {
     super.key,
     this.title,
     required this.meals,
+    required this.onToggleFavorite,
   });
 
   final String? title;
   final List<Meal> meals;
+  final void Function(Meal meal) onToggleFavorite;
 
   void _selectMeal({
     required BuildContext context,
@@ -23,6 +25,7 @@ class MealsScreen extends StatelessWidget {
         builder: (ctx) => MealDetailsScreen(
           title: meal.title,
           meal: meal,
+          onToggleFavorite: onToggleFavorite,
         ),
       ),
     );
@@ -44,7 +47,9 @@ class MealsScreen extends StatelessWidget {
             height: 16,
           ),
           Text(
-            'Try selecting a different category!',
+            title == null
+                ? 'Try selecting a meal as your favorite!'
+                : 'Try selecting a different category!',
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
