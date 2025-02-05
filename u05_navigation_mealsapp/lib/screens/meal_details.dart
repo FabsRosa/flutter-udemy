@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'package:u05_navigation_mealsapp/models/meal.dart';
+import 'package:u05_navigation_mealsapp/widgets/favoriteIcon.dart';
 
 class MealDetailsScreen extends StatelessWidget {
   const MealDetailsScreen({
@@ -9,11 +10,13 @@ class MealDetailsScreen extends StatelessWidget {
     required this.title,
     required this.meal,
     required this.onToggleFavorite,
+    required this.isMealFavorited,
   });
 
   final String title;
   final Meal meal;
   final void Function(Meal meal) onToggleFavorite;
+  final bool Function(Meal meal) isMealFavorited;
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +24,11 @@ class MealDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         actions: [
-          IconButton(
-            onPressed: () {
-              onToggleFavorite(meal);
-            },
-            icon: Icon(
-              Icons.star_border,
-            ),
-          ),
+          FavoriteIcon(
+            meal: meal,
+            onToggleFavorite: onToggleFavorite,
+            isMealFavorited: isMealFavorited,
+          )
         ],
       ),
       body: SingleChildScrollView(

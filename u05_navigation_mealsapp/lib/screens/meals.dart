@@ -10,11 +10,13 @@ class MealsScreen extends StatelessWidget {
     this.title,
     required this.meals,
     required this.onToggleFavorite,
+    required this.isMealFavorited,
   });
 
   final String? title;
   final List<Meal> meals;
   final void Function(Meal meal) onToggleFavorite;
+  final bool Function(Meal meal) isMealFavorited;
 
   void _selectMeal({
     required BuildContext context,
@@ -26,6 +28,7 @@ class MealsScreen extends StatelessWidget {
           title: meal.title,
           meal: meal,
           onToggleFavorite: onToggleFavorite,
+          isMealFavorited: isMealFavorited,
         ),
       ),
     );
