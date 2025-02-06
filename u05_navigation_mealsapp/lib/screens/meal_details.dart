@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'package:u05_navigation_mealsapp/models/meal.dart';
-import 'package:u05_navigation_mealsapp/widgets/favorite_icon.dart';
 import 'package:u05_navigation_mealsapp/providers/favorites_provider.dart';
 
 class MealDetailsScreen extends ConsumerWidget {
