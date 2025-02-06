@@ -9,14 +9,10 @@ class MealDetailsScreen extends StatelessWidget {
     super.key,
     required this.title,
     required this.meal,
-    required this.onToggleFavorite,
-    required this.isMealFavorited,
   });
 
   final String title;
   final Meal meal;
-  final void Function(Meal meal) onToggleFavorite;
-  final bool Function(Meal meal) isMealFavorited;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +22,6 @@ class MealDetailsScreen extends StatelessWidget {
         actions: [
           FavoriteIcon(
             meal: meal,
-            onToggleFavorite: onToggleFavorite,
-            isMealFavorited: isMealFavorited,
           )
         ],
       ),

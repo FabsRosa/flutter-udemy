@@ -5,13 +5,9 @@ class FavoriteIcon extends StatefulWidget {
   const FavoriteIcon({
     super.key,
     required this.meal,
-    required this.onToggleFavorite,
-    required this.isMealFavorited,
   });
 
   final Meal meal;
-  final void Function(Meal meal) onToggleFavorite;
-  final bool Function(Meal meal) isMealFavorited;
 
   @override
   State<FavoriteIcon> createState() {
