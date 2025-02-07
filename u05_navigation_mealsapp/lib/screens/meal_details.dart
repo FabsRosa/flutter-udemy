@@ -38,36 +38,26 @@ class MealDetailsScreen extends ConsumerWidget {
                 ),
               );
             },
-            icon: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 250),
-              transitionBuilder: (child, animation) {
-                return ScaleTransition(
-                  scale: CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeIn,
-                  ),
-                  child: child,
-                );
-              },
+            icon: AnimatedRotation(
+              turns: isFavorite ? 0.6 : 0.0, // Smooth rotation
+              duration: const Duration(milliseconds: 500),
               child: Icon(
                 isFavorite ? Icons.star : Icons.star_border,
                 key: ValueKey(isFavorite),
               ),
-              // Another option of
+              // Another option of animation (kinda ugly but another valid option)
+              // Change it to FadeIn animation to better animation
               /* icon: AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
               transitionBuilder: (child, animation) {
-                return RotationTransition(
-                  turns: Tween(
-                    begin: 0.8,
-                    end: 1.0,
-                  ).animate(animation),
-                  child: child,
-                );
+              return ScaleTransition(
+                scale: animation,
+                child: child,
+              );
               },
               child: Icon(
-                isFavorite ? Icons.star : Icons.star_border,
-                key: ValueKey(isFavorite),
+              isFavorite ? Icons.star : Icons.star_border,
+              key: ValueKey(isFavorite),
               ),
             ), */
             ),
