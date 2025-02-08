@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:u06_forms_shoppinglistapp/screens/main_screen.dart';
+import 'package:u06_forms_shoppinglistapp/theme/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,15 +9,12 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Groceries',
-      theme: ,
-        scaffoldBackgroundColor: const Color.fromARGB(255, 50, 58, 60),
-      ),
-      home: ...,
+      theme: AppTheme.lightTheme,
+      home: MainScreen(),
     );
   }
 }

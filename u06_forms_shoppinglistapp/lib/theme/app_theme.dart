@@ -1,36 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-const kSeedColor = Color.fromARGB(255, 147, 229, 250);
-const kSurfaceColor = Color.fromARGB(255, 42, 51, 59);
+const kSeedColor = Color.fromARGB(255, 252, 93, 152);
+const kGradientColor = [
+  Color.fromARGB(255, 252, 93, 152),
+  Color.fromARGB(255, 250, 92, 127),
+  Color.fromARGB(255, 252, 116, 101),
+];
 
 final kColorSchemeLight = ColorScheme.fromSeed(
   seedColor: kSeedColor,
   brightness: Brightness.light,
-  surface: kSurfaceColor,
 );
 
 final kColorSchemeDark = ColorScheme.fromSeed(
   seedColor: kSeedColor,
   brightness: Brightness.dark,
-  surface: kSurfaceColor,
 );
 
 class AppTheme {
   static ThemeData lightTheme = ThemeData.light().copyWith(
-    colorScheme: kColorSchemeLight,
-    brightness: Brightness.light,
-    textTheme: const TextTheme(
+    textTheme: GoogleFonts.nunitoTextTheme().copyWith(
+      titleLarge: TextStyle(fontSize: 24, color: Colors.white),
       bodyLarge: TextStyle(fontSize: 18, color: Colors.black),
       bodyMedium: TextStyle(fontSize: 16, color: Colors.black87),
     ),
+    colorScheme: kColorSchemeLight,
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: Colors.white,
   );
 
   static ThemeData darkTheme = ThemeData.dark().copyWith(
-    colorScheme: kColorSchemeDark,
-    brightness: Brightness.dark,
-    textTheme: const TextTheme(
+    textTheme: GoogleFonts.nunitoTextTheme().copyWith(
+      titleLarge: TextStyle(fontSize: 24, color: Colors.white),
       bodyLarge: TextStyle(fontSize: 18, color: Colors.white),
       bodyMedium: TextStyle(fontSize: 16, color: Colors.white70),
     ),
+    colorScheme: kColorSchemeDark,
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: kColorSchemeDark.primaryContainer,
   );
+
+  static PreferredSizeWidget gradientAppBar({required Widget title}) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(56.0),
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: kGradientColor,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: AppBar(
+          title: Center(child: title),
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.transparent,
+          elevation: 4,
+          shadowColor: Colors.black.withValues(alpha: 0.25),
+        ),
+      ),
+    );
+  }
 }
