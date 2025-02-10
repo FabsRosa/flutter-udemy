@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 const kSeedColor = Color.fromARGB(255, 252, 93, 152);
-const kGradientColor = [
-  Color.fromARGB(255, 252, 93, 152),
-  Color.fromARGB(255, 250, 92, 127),
-  Color.fromARGB(255, 252, 116, 101),
-];
 
 final kColorSchemeLight = ColorScheme.fromSeed(
   seedColor: kSeedColor,
@@ -18,15 +13,20 @@ final kColorSchemeDark = ColorScheme.fromSeed(
   brightness: Brightness.dark,
 );
 
+const kGradientColor = [
+  Color.fromARGB(255, 252, 93, 152),
+  Color.fromARGB(255, 250, 92, 127),
+  Color.fromARGB(255, 252, 116, 101),
+];
+
 class AppTheme {
   static ThemeData lightTheme = ThemeData.light().copyWith(
     textTheme: GoogleFonts.nunitoTextTheme().copyWith(
-      titleLarge: TextStyle(fontSize: 24, color: Colors.white),
+      titleLarge: TextStyle(fontSize: 20, color: Colors.white),
       bodyLarge: TextStyle(fontSize: 18, color: Colors.black),
-      bodyMedium: TextStyle(fontSize: 16, color: Colors.black87),
+      bodyMedium: TextStyle(fontSize: 16, color: Colors.black),
     ),
     colorScheme: kColorSchemeLight,
-    brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,
   );
 
@@ -37,11 +37,11 @@ class AppTheme {
       bodyMedium: TextStyle(fontSize: 16, color: Colors.white70),
     ),
     colorScheme: kColorSchemeDark,
-    brightness: Brightness.dark,
     scaffoldBackgroundColor: kColorSchemeDark.primaryContainer,
   );
 
-  static PreferredSizeWidget gradientAppBar({required Widget title}) {
+  static PreferredSizeWidget gradientAppBar(
+      {required Widget title, List<Widget>? actions}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(56.0),
       child: Container(
@@ -53,7 +53,8 @@ class AppTheme {
           ),
         ),
         child: AppBar(
-          title: Center(child: title),
+          title: title,
+          actions: actions,
           foregroundColor: Colors.white,
           backgroundColor: Colors.transparent,
           elevation: 4,

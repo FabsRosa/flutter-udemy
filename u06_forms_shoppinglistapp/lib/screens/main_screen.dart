@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:u06_forms_shoppinglistapp/screens/groceries.dart';
-import 'package:u06_forms_shoppinglistapp/theme/app_theme.dart';
-import 'package:u06_forms_shoppinglistapp/widgets/main_drawer.dart';
+
+import 'package:u06_forms_shoppinglistapp/screens/groceries/groceries.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -21,51 +20,20 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    late String activePageTitle;
     late Widget activePage;
 
     if (_selectedPageIndex == 0) {
-      activePageTitle = 'Groceries';
-      activePage = Groceries();
+      activePage = Groceries(
+        selectedPageIndex: _selectedPageIndex,
+        onSelectPage: _selectPage,
+      );
+    } else if (_selectedPageIndex == 1) {
+      activePage = Groceries(
+        selectedPageIndex: _selectedPageIndex,
+        onSelectPage: _selectPage,
+      );
     }
 
-    return Scaffold(
-      appBar: AppTheme.gradientAppBar(
-        title: Text(activePageTitle),
-      ),
-      body: activePage,
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: kGradientColor,
-            begin: Alignment.bottomRight,
-            end: Alignment.topLeft,
-          ),
-        ),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.transparent,
-          currentIndex: _selectedPageIndex,
-          onTap: _selectPage,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: Colors.white,
-              ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: Colors.white,
-              ),
-              label: 'Home',
-            ),
-          ],
-        ),
-      ),
-    );
+    return activePage;
   }
 }

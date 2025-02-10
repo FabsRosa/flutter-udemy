@@ -1,7 +1,7 @@
 import 'package:u06_forms_shoppinglistapp/models/category.dart';
 
-class GroceryItem {
-  const GroceryItem({
+class Grocery {
+  const Grocery({
     required this.id,
     required this.name,
     required this.quantity,
