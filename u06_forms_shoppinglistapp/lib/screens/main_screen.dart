@@ -23,12 +23,12 @@ class _MainScreenState extends State<MainScreen> {
     late Widget activePage;
 
     if (_selectedPageIndex == 0) {
-      activePage = Groceries(
+      activePage = GroceriesScreen(
         selectedPageIndex: _selectedPageIndex,
         onSelectPage: _selectPage,
       );
     } else if (_selectedPageIndex == 1) {
-      activePage = Groceries(
+      activePage = GroceriesScreen(
         selectedPageIndex: _selectedPageIndex,
         onSelectPage: _selectPage,
       );
