@@ -12,6 +12,12 @@ class GroceriesNotifier extends StateNotifier<List<Grocery>> {
     state =
         state.where((stateGrocery) => stateGrocery.id != grocery.id).toList();
   }
+
+  void insertGrocery(Grocery grocery, int index) {
+    final newState = List<Grocery>.from(state);
+    newState.insert(index, grocery);
+    state = newState;
+  }
 }
 
 final groceriesProvider =

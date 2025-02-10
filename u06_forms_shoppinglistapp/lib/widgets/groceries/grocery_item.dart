@@ -7,13 +7,15 @@ class GroceryItem extends ConsumerWidget {
   const GroceryItem({
     super.key,
     required this.grocery,
+    required this.groceryIndex,
   });
 
   final Grocery grocery;
+  final int groceryIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final paddingSize = 22.0;
+    const paddingSize = 22.0;
     return Dismissible(
       key: ValueKey(grocery.id),
       background: Container(
@@ -21,7 +23,7 @@ class GroceryItem extends ConsumerWidget {
           color: Theme.of(context).colorScheme.error,
         ),
         alignment: Alignment.centerLeft,
-        padding: EdgeInsets.symmetric(horizontal: paddingSize),
+        padding: const EdgeInsets.symmetric(horizontal: paddingSize),
         child: Row(
           children: [
             Icon(
@@ -41,7 +43,11 @@ class GroceryItem extends ConsumerWidget {
       },
       child: Padding(
         padding: EdgeInsets.fromLTRB(
-            paddingSize, paddingSize / 2, paddingSize, paddingSize / 2),
+          paddingSize,
+          groceryIndex == 0 ? paddingSize : paddingSize / 2,
+          paddingSize,
+          paddingSize / 2,
+        ),
         child: Row(
           key: ValueKey(grocery.id),
           children: [
@@ -50,7 +56,7 @@ class GroceryItem extends ConsumerWidget {
               height: paddingSize,
               color: grocery.category.color,
             ),
-            SizedBox(width: paddingSize),
+            const SizedBox(width: paddingSize),
             Text(
               grocery.name,
               style: Theme.of(context).textTheme.bodyLarge,
