@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u06_forms_shoppinglistapp/models/grocery.dart';
-import 'package:u06_forms_shoppinglistapp/providers/groceries_provider.dart';
 
 class GroceryItem extends ConsumerWidget {
   const GroceryItem({
     super.key,
     required this.grocery,
     required this.groceryIndex,
+    required this.onDeleted,
   });
 
   final Grocery grocery;
   final int groceryIndex;
+  final void Function({
+    required Grocery grocery,
+    required int groceryIndex,
+  }) onDeleted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const paddingSize = 22.0;
+    const paddingSize = 24.0;
     return Dismissible(
       key: ValueKey(grocery.id),
       background: Container(
@@ -39,7 +43,10 @@ class GroceryItem extends ConsumerWidget {
         ),
       ),
       onDismissed: (direction) {
-        ref.read(groceriesProvider.notifier).removeGrocery(grocery);
+        onDeleted(
+          grocery: grocery,
+          groceryIndex: groceryIndex,
+        );
       },
       child: Padding(
         padding: EdgeInsets.fromLTRB(

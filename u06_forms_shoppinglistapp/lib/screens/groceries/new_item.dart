@@ -22,10 +22,14 @@ class _NewItemScreenState extends State<NewItemScreen> {
   var _enteredName = '';
   var _enteredQuantity = 1;
   var _selectedCategory = categories[Categories.other]!;
+  var _isSending = false;
 
   void _saveForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      setState(() {
+        _isSending = true;
+      });
       final url = Uri.https('flutter-u06-forms-default-rtdb.firebaseio.com',
           'shopping-list.json');
       final response = await http.post(
@@ -42,10 +46,19 @@ class _NewItemScreenState extends State<NewItemScreen> {
         ),
       );
 
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
       if (!context.mounted) {
         return;
       }
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(
+        Grocery(
+          id: responseData['name'],
+          name: _enteredName,
+          quantity: _enteredQuantity,
+          category: _selectedCategory,
+        ),
+      );
     }
   }
 
@@ -150,13 +163,19 @@ class _NewItemScreenState extends State<NewItemScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: _resetForm,
+                    onPressed: _isSending ? null : _resetForm,
                     child: const Text('Reset'),
                   ),
                   const SizedBox(width: 24),
                   ElevatedButton(
-                    onPressed: _saveForm,
-                    child: const Text('Save'),
+                    onPressed: _isSending ? null : _saveForm,
+                    child: _isSending
+                        ? const SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text('Save'),
                   ),
                 ],
               )
