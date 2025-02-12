@@ -43,11 +43,7 @@ class _GroceriesScreenState extends State<GroceriesScreen> {
 
     if (response.statusCode >= 400) {
       throw Exception('Failed to fetch from server. Please try again later.');
-      return [];
     } else if (response.body == 'null') {
-      // setState(() {
-      //   _isLoading = false;
-      // });
       return [];
     }
 
@@ -120,37 +116,6 @@ class _GroceriesScreenState extends State<GroceriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    late Widget bodyContent;
-
-    if (_error != null) {
-      bodyContent = Center(
-        child: Text(
-          _error!,
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                color: kSeedColor,
-              ),
-        ),
-      );
-    } else if (_groceries.isEmpty) {
-      bodyContent = Center(
-        child: Text(
-          'Try adding some groceries.',
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                color: kSeedColor,
-              ),
-        ),
-      );
-    } else {
-      bodyContent = ListView.builder(
-        itemCount: _groceries.length,
-        itemBuilder: (ctx, index) => GroceryItem(
-          grocery: _groceries[index],
-          groceryIndex: index,
-          onDeleted: _removeItem,
-        ),
-      );
-    }
-
     return Scaffold(
       appBar: AppTheme.gradientAppBar(
         title: Text('GroceriesScreen'),
@@ -175,7 +140,36 @@ class _GroceriesScreenState extends State<GroceriesScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (snapshot.hasError) {}
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                snapshot.error.toString(),
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: kSeedColor,
+                    ),
+              ),
+            );
+          }
+
+          if (snapshot.data!.isEmpty) {
+            return Center(
+              child: Text(
+                'Try adding some groceries.',
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: kSeedColor,
+                    ),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (ctx, index) => GroceryItem(
+              grocery: snapshot.data![index],
+              groceryIndex: index,
+              onDeleted: _removeItem,
+            ),
+          );
         },
       ),
     );
