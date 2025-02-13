@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const kSeedColor = Color.fromARGB(255, 50, 50, 50);
+const kSeedColor = Color.fromARGB(255, 18, 18, 18);
 
 final kColorSchemeDark = ColorScheme.fromSeed(
   seedColor: kSeedColor,
@@ -22,7 +22,7 @@ class MainTheme {
       bodyMedium: TextStyle(fontSize: 16, color: Colors.white),
     ),
     colorScheme: kColorSchemeDark,
-    scaffoldBackgroundColor: Color.fromARGB(255, 30, 30, 30),
+    scaffoldBackgroundColor: kSeedColor,
   );
 
   static PreferredSizeWidget gradientAppBar(
@@ -43,7 +43,6 @@ class MainTheme {
           foregroundColor: Colors.white,
           backgroundColor: Colors.transparent,
           elevation: 0,
-          // shadowColor: Colors.black.withValues(alpha: 0.25),
         ),
       ),
     );

@@ -33,7 +33,7 @@ class PlacesScreen extends ConsumerWidget {
     }
   }
 
-  void _addPlace(BuildContext context, WidgetRef ref) async {
+  void _onAddButton({required BuildContext context, required WidgetRef ref}) {
     /* final newPlace = await Navigator.of(context).push<Place>(
       MaterialPageRoute(
         builder: (ctx) => const NewPlaceScreen(),
@@ -52,21 +52,15 @@ class PlacesScreen extends ConsumerWidget {
     final places = ref.watch(placesProvider);
 
     return Scaffold(
-      appBar: MainTheme.gradientAppBar(
+      appBar: AppBar(
         title: Text('Your Places'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _addPlace(context, ref);
-            },
-            icon: Icon(Icons.add),
-          ),
-        ],
+        backgroundColor: kSeedColor,
       ),
       drawer: MainDrawer(),
       bottomNavigationBar: MainBottomNavigationBar(
         selectedPageIndex: selectedPageIndex,
         onSelectPage: onSelectPage,
+        onAddButton: () => _onAddButton(context: context, ref: ref),
       ),
       body: _bodyContent(
         context: context,

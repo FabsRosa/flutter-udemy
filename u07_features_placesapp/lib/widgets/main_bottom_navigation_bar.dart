@@ -7,21 +7,19 @@ class MainBottomNavigationBar extends StatelessWidget {
     super.key,
     required this.selectedPageIndex,
     required this.onSelectPage,
+    required this.onAddButton,
   });
 
   final int selectedPageIndex;
   final void Function(int index) onSelectPage;
+  final void Function() onAddButton;
 
   @override
   Widget build(BuildContext context) {
+    const addIconSize = 60.0;
+
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: kGradientColor,
-          begin: Alignment.bottomCenter,
-          end: Alignment.topCenter,
-        ),
-      ),
+      color: kSeedColor,
       child: BottomNavigationBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -33,6 +31,19 @@ class MainBottomNavigationBar extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Container(
+              height: addIconSize,
+              width: addIconSize,
+              decoration:
+                  BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              child: Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
+            ),
+            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

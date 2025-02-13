@@ -32,6 +32,11 @@ class _MainScreenState extends State<MainScreen> {
         selectedPageIndex: _selectedPageIndex,
         onSelectPage: _selectPage,
       );
+    } else if (_selectedPageIndex == 2) {
+      activePage = PlacesScreen(
+        selectedPageIndex: _selectedPageIndex,
+        onSelectPage: _selectPage,
+      );
     }
 
     return activePage;

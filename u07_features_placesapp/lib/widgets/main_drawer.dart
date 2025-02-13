@@ -8,17 +8,25 @@ class MainDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      elevation: 0,
+      shadowColor: Colors.transparent,
       child: Column(
         children: [
-          DrawerHeader(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
+          Theme(
+            data: Theme.of(context).copyWith(
+              dividerTheme: const DividerThemeData(color: Colors.transparent),
+            ),
+            child: DrawerHeader(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
-              colors: kGradientColor,
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-            )),
-            child: Row(),
+                  colors: kGradientColor,
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                ),
+              ),
+              child: Row(),
+            ),
           ),
         ],
       ),
