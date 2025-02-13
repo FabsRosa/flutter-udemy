@@ -21,6 +21,14 @@ class MainTheme {
       bodyLarge: TextStyle(fontSize: 18, color: Colors.white),
       bodyMedium: TextStyle(fontSize: 16, color: Colors.white),
     ),
+    cardTheme: CardTheme().copyWith(
+      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      color: kColorSchemeDark.secondaryContainer,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(1),
+      ),
+    ),
     colorScheme: kColorSchemeDark,
     scaffoldBackgroundColor: kSeedColor,
   );

@@ -7,16 +7,16 @@ class MainBottomNavigationBar extends StatelessWidget {
     super.key,
     required this.selectedPageIndex,
     required this.onSelectPage,
-    required this.onAddButton,
+    // required this.onAddButton,
   });
 
   final int selectedPageIndex;
   final void Function(int index) onSelectPage;
-  final void Function() onAddButton;
+  // final void Function() onAddButton;
 
   @override
   Widget build(BuildContext context) {
-    const addIconSize = 60.0;
+    // const addIconSize = 60.0;
 
     return Container(
       color: kSeedColor,
@@ -27,12 +27,15 @@ class MainBottomNavigationBar extends StatelessWidget {
         onTap: onSelectPage,
         selectedItemColor: Color.fromARGB(255, 255, 255, 255),
         unselectedItemColor: Color.fromARGB(255, 232, 232, 232),
+        type: BottomNavigationBarType.fixed,
+        showUnselectedLabels: false,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
             label: 'Home',
+            icon: Icon(Icons.home),
+            activeIcon: Icon(Icons.maps_home_work_sharp),
           ),
-          BottomNavigationBarItem(
+/*           BottomNavigationBarItem(
             icon: Container(
               height: addIconSize,
               width: addIconSize,
@@ -44,10 +47,10 @@ class MainBottomNavigationBar extends StatelessWidget {
               ),
             ),
             label: '',
-          ),
+          ), */
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
             label: 'Other',
+            icon: Icon(Icons.settings),
           ),
         ],
       ),
