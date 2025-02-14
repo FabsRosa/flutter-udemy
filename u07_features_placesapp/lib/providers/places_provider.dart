@@ -1,11 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:u07_features_placesapp/models/place.dart';
 
 class PlacesNotifier extends StateNotifier<List<Place>> {
-  PlacesNotifier() : super([]);
+  PlacesNotifier() : super(const []);
 
   void addPlace(Place place) {
-    state = [...state, place];
+    state = [place, ...state];
   }
 
   void removePlace(Place place) {

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u07_features_placesapp/models/place.dart';
-import 'package:u07_features_placesapp/providers/placeProvider.dart';
+import 'package:u07_features_placesapp/providers/places_provider.dart';
+import 'package:u07_features_placesapp/screens/places/place_detail.dart';
 
 class PlaceItem extends ConsumerWidget {
   const PlaceItem({
@@ -49,23 +50,23 @@ class PlaceItem extends ConsumerWidget {
           ref: ref,
         );
       },
-      child: SizedBox(
-        width: double.infinity,
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 16,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  place.title,
-                ),
-              ],
-            ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
+        // Or use Card + InkWell
+        child: ListTile(
+          title: Text(
+            place.title,
           ),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => PlaceDetailScreen(place: place),
+              ),
+            );
+          },
         ),
       ),
     );

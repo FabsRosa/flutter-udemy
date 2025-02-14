@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u07_features_placesapp/models/place.dart';
-import 'package:u07_features_placesapp/providers/placeProvider.dart';
+import 'package:u07_features_placesapp/providers/places_provider.dart';
 import 'package:u07_features_placesapp/themes/main_theme.dart';
 
 class NewPlaceScreen extends ConsumerStatefulWidget {
@@ -20,10 +20,11 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      final newPlace = Place(
-        title: _enteredTitle,
-      );
-      ref.read(placesProvider.notifier).addPlace(newPlace);
+      ref.read(placesProvider.notifier).addPlace(
+            Place(
+              title: _enteredTitle,
+            ),
+          );
 
       Navigator.of(context).pop();
     }
@@ -36,7 +37,7 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
         title: Text('New Place'),
         backgroundColor: kSeedColor,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
           horizontal: 30,
           vertical: 12,
@@ -70,7 +71,7 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const Spacer(),
-                  ElevatedButton(
+                  ElevatedButton.icon(
                     onPressed: _saveForm,
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all(
@@ -80,7 +81,8 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
                         Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                     ),
-                    child: const Text('Save'),
+                    icon: const Icon(Icons.check),
+                    label: const Text('Save'),
                   ),
                 ],
               )

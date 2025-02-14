@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:u07_features_placesapp/screens/places/new_place.dart';
 
 import 'package:u07_features_placesapp/themes/main_theme.dart';
-import 'package:u07_features_placesapp/models/place.dart';
-import 'package:u07_features_placesapp/providers/placeProvider.dart';
-import 'package:u07_features_placesapp/widgets/places/placeItem.dart';
+import 'package:u07_features_placesapp/providers/places_provider.dart';
+import 'package:u07_features_placesapp/screens/places/new_place.dart';
+import 'package:u07_features_placesapp/widgets/places/places_list.dart';
 // import 'package:u07_features_placesapp/widgets/main_bottom_navigation_bar.dart';
 // import 'package:u07_features_placesapp/widgets/main_drawer.dart';
 
@@ -19,31 +18,8 @@ class PlacesScreen extends ConsumerWidget {
   // final int selectedPageIndex;
   // final void Function(int index) onSelectPage;
 
-  Widget _bodyContent({
-    required BuildContext context,
-    required List<Place> places,
-  }) {
-    if (places.isEmpty) {
-      return Center(
-        child: Text(
-          'Try adding a place.',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-      );
-    } else {
-      return ListView.builder(
-        itemCount: places.length,
-        itemBuilder: (context, index) => PlaceItem(
-          key: ValueKey(places[index].id),
-          place: places[index],
-          index: index,
-        ),
-      );
-    }
-  }
-
   void _onAddButton({required BuildContext context}) {
-    Navigator.of(context).push<Place>(
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => const NewPlaceScreen(),
       ),
@@ -75,8 +51,7 @@ class PlacesScreen extends ConsumerWidget {
         onSelectPage: onSelectPage,
         // onAddButton: () => _onAddButton(context: context),
       ), */
-      body: _bodyContent(
-        context: context,
+      body: PlacesList(
         places: places,
       ),
     );
