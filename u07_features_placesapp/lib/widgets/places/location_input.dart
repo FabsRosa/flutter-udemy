@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({
@@ -13,6 +14,66 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
+  Location? _pickedLocation;
+  var _isGettingLocation = false;
+
+  Widget _locationPreview({required Color buttonColor}) {
+    return Container(
+      alignment: Alignment.center,
+      height: 170,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 1,
+          color: buttonColor.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Text(
+        'No location chosen',
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: buttonColor,
+            ),
+      ),
+    );
+  }
+
+  Widget _currentLocationIcon({required Color buttonColor}) {}
+
+  void _getCurrentLocation() async {
+    Location location = Location();
+
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    setState(() {
+      _isGettingLocation = true;
+    });
+
+    locationData = await location.getLocation();
+
+    setState(() {
+      _isGettingLocation = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final buttonColor = widget.hasError
@@ -20,32 +81,39 @@ class _LocationInputState extends State<LocationInput> {
         : Theme.of(context).colorScheme.primary;
 
     return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 1,
-          color: buttonColor.withValues(alpha: 0.2),
-        ),
-      ),
-      // height: 250,
-      // width: double.infinity,
       alignment: Alignment.center,
       child: Column(
         children: [
-          Container(
-            height: 170,
-            width: double.infinity,
-          ),
+          _locationPreview(buttonColor: buttonColor),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               TextButton.icon(
-                icon: Icon(Icons.my_location),
-                label: const Text('Get Current Location'),
-                onPressed: () {},
+                icon: Icon(
+                  Icons.my_location,
+                  color: buttonColor,
+                ),
+                label: Text(
+                  'Get Current Location',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontSize: 11.5,
+                        color: buttonColor,
+                      ),
+                ),
+                onPressed: _getCurrentLocation,
               ),
               TextButton.icon(
-                icon: Icon(Icons.map),
-                label: const Text('Select on Map'),
+                icon: Icon(
+                  Icons.map,
+                  color: buttonColor,
+                ),
+                label: Text(
+                  'Select on Map',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontSize: 11.5,
+                        color: buttonColor,
+                      ),
+                ),
                 onPressed: () {},
               ),
             ],

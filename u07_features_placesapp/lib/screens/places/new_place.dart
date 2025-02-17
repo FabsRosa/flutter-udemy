@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:location/location.dart';
 
 import 'package:u07_features_placesapp/models/place.dart';
 import 'package:u07_features_placesapp/providers/places_provider.dart';
@@ -73,12 +74,14 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
                 },
               ),
               const SizedBox(height: 24),
-              FormField /* <File> */ (
+              FormField<Location>(
                 builder: (state) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      LocationInput(),
+                      LocationInput(
+                        hasError: state.hasError,
+                      ),
                       if (state.hasError)
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
