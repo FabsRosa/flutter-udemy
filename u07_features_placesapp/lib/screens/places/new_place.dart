@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u07_features_placesapp/models/place.dart';
 import 'package:u07_features_placesapp/providers/places_provider.dart';
 import 'package:u07_features_placesapp/themes/main_theme.dart';
+import 'package:u07_features_placesapp/widgets/places/image_input.dart';
+import 'package:u07_features_placesapp/widgets/places/location_input.dart';
 
 class NewPlaceScreen extends ConsumerStatefulWidget {
   const NewPlaceScreen({super.key});
@@ -15,6 +19,7 @@ class NewPlaceScreen extends ConsumerStatefulWidget {
 class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   var _enteredTitle = '';
+  File? _takenImage;
 
   void _saveForm() {
     if (_formKey.currentState!.validate()) {
@@ -23,6 +28,7 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
       ref.read(placesProvider.notifier).addPlace(
             Place(
               title: _enteredTitle,
+              image: _takenImage!,
             ),
           );
 
@@ -64,6 +70,70 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
                 },
                 onSaved: (value) {
                   _enteredTitle = value!;
+                },
+              ),
+              const SizedBox(height: 24),
+              FormField /* <File> */ (
+                builder: (state) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      LocationInput(),
+                      if (state.hasError)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            state.errorText!,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+                validator: (value) {
+                  if (_takenImage == null) {
+                    return 'A location must be defined.';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+              const SizedBox(height: 24),
+              FormField<File>(
+                builder: (state) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ImageInput(
+                        hasError: state.hasError,
+                        onPickImage: (image) {
+                          _takenImage = image;
+                          state.didChange(image);
+                        },
+                      ),
+                      if (state.hasError)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            state.errorText!,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+                validator: (value) {
+                  if (_takenImage == null) {
+                    return 'A picture must be taken.';
+                  } else {
+                    return null;
+                  }
                 },
               ),
               const SizedBox(height: 24),

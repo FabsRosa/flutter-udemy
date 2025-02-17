@@ -57,6 +57,10 @@ class PlaceItem extends ConsumerWidget {
         ),
         // Or use Card + InkWell
         child: ListTile(
+          leading: CircleAvatar(
+            radius: 26,
+            foregroundImage: FileImage(place.image),
+          ),
           title: Text(
             place.title,
           ),
