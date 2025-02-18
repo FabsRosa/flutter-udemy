@@ -1,12 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:http/http.dart' as http;
+import 'package:transparent_image/transparent_image.dart';
+
+import 'package:u07_features_placesapp/models/place.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({
     super.key,
+    required this.onPickLocation,
     this.hasError = false,
   });
 
+  final void Function(PlaceLocation image) onPickLocation;
   final bool hasError;
 
   @override
@@ -14,10 +22,54 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
-  Location? _pickedLocation;
+  PlaceLocation? _pickedLocation;
   var _isGettingLocation = false;
+  final apiKey = 'AIzaSyBIle6TDQROYB3EFh0HNgTLrVbqmpV2N5I';
+
+  String get locationImage {
+    if (_pickedLocation == null ||
+        _pickedLocation?.latitude == null ||
+        _pickedLocation?.longitude == null) {
+      return '';
+    }
+    final latitude = _pickedLocation!.latitude;
+    final longitude = _pickedLocation!.longitude;
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:%7C$latitude,$longitude&key=$apiKey';
+  }
 
   Widget _locationPreview({required Color buttonColor}) {
+    late Widget containerContent;
+    if (_isGettingLocation) {
+      containerContent = const CircularProgressIndicator();
+    } else if (_pickedLocation != null) {
+      containerContent = FadeInImage(
+        placeholder: MemoryImage(kTransparentImage),
+        image: NetworkImage(locationImage),
+        fit: BoxFit.cover,
+        height: double.infinity,
+        width: double.infinity,
+      );
+    } else {
+      containerContent = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.location_pin,
+            size: 42,
+            color: buttonColor,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'No location chosen',
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: buttonColor),
+          ),
+        ],
+      );
+    }
     return Container(
       alignment: Alignment.center,
       height: 170,
@@ -28,17 +80,26 @@ class _LocationInputState extends State<LocationInput> {
           color: buttonColor.withValues(alpha: 0.2),
         ),
       ),
-      child: Text(
-        'No location chosen',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: buttonColor,
-            ),
-      ),
+      child: containerContent,
     );
   }
 
-  Widget _currentLocationIcon({required Color buttonColor}) {}
+  Widget _currentLocationButton({required Color buttonColor}) {
+    return TextButton.icon(
+      icon: Icon(
+        Icons.my_location,
+        color: buttonColor,
+      ),
+      label: Text(
+        'Get Current Location',
+        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              fontSize: 11.5,
+              color: buttonColor,
+            ),
+      ),
+      onPressed: _getCurrentLocation,
+    );
+  }
 
   void _getCurrentLocation() async {
     Location location = Location();
@@ -68,10 +129,47 @@ class _LocationInputState extends State<LocationInput> {
     });
 
     locationData = await location.getLocation();
+    final latitude = locationData.latitude;
+    final longitude = locationData.longitude;
+
+    if (latitude == null || longitude == null) {
+      return;
+    }
+
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
+
+    final response = await http.get(url);
+    final responseData = json.decode(response.body);
+    final address = responseData['results'][0]['formatted_address'];
 
     setState(() {
+      _pickedLocation = PlaceLocation(
+        latitude: latitude,
+        longitude: longitude,
+        address: address,
+      );
       _isGettingLocation = false;
     });
+
+    widget.onPickLocation(_pickedLocation!);
+  }
+
+  Widget _selectOnMapButton({required Color buttonColor}) {
+    return TextButton.icon(
+      icon: Icon(
+        Icons.map,
+        color: buttonColor,
+      ),
+      label: Text(
+        'Select on Map',
+        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              fontSize: 11.5,
+              color: buttonColor,
+            ),
+      ),
+      onPressed: () {},
+    );
   }
 
   @override
@@ -88,34 +186,8 @@ class _LocationInputState extends State<LocationInput> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              TextButton.icon(
-                icon: Icon(
-                  Icons.my_location,
-                  color: buttonColor,
-                ),
-                label: Text(
-                  'Get Current Location',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontSize: 11.5,
-                        color: buttonColor,
-                      ),
-                ),
-                onPressed: _getCurrentLocation,
-              ),
-              TextButton.icon(
-                icon: Icon(
-                  Icons.map,
-                  color: buttonColor,
-                ),
-                label: Text(
-                  'Select on Map',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontSize: 11.5,
-                        color: buttonColor,
-                      ),
-                ),
-                onPressed: () {},
-              ),
+              _currentLocationButton(buttonColor: buttonColor),
+              _selectOnMapButton(buttonColor: buttonColor),
             ],
           )
         ],

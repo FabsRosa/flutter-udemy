@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
+
 import 'package:u07_features_placesapp/models/place.dart';
 import 'package:u07_features_placesapp/themes/main_theme.dart';
 
@@ -19,11 +21,15 @@ class PlaceDetailScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          Image.file(
-            place.image,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
+          Hero(
+            tag: place.id,
+            child: FadeInImage(
+              placeholder: MemoryImage(kTransparentImage),
+              image: FileImage(place.image),
+              fit: BoxFit.cover,
+              height: double.infinity,
+              width: double.infinity,
+            ),
           ),
         ],
       ),

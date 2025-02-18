@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:location/location.dart';
 
 import 'package:u07_features_placesapp/models/place.dart';
 import 'package:u07_features_placesapp/providers/places_provider.dart';
@@ -21,6 +20,7 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   var _enteredTitle = '';
   File? _takenImage;
+  PlaceLocation? _selectedLocation;
 
   void _saveForm() {
     if (_formKey.currentState!.validate()) {
@@ -30,6 +30,7 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
             Place(
               title: _enteredTitle,
               image: _takenImage!,
+              location: _selectedLocation!,
             ),
           );
 
@@ -74,12 +75,16 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
                 },
               ),
               const SizedBox(height: 24),
-              FormField<Location>(
+              FormField<PlaceLocation>(
                 builder: (state) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       LocationInput(
+                        onPickLocation: (location) {
+                          _selectedLocation = location;
+                          state.didChange(location);
+                        },
                         hasError: state.hasError,
                       ),
                       if (state.hasError)
@@ -97,7 +102,7 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
                   );
                 },
                 validator: (value) {
-                  if (_takenImage == null) {
+                  if (_selectedLocation == null) {
                     return 'A location must be defined.';
                   } else {
                     return null;

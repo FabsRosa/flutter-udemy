@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import 'package:u07_features_placesapp/models/place.dart';
 import 'package:u07_features_placesapp/providers/places_provider.dart';
@@ -57,9 +58,13 @@ class PlaceItem extends ConsumerWidget {
         ),
         // Or use Card + InkWell
         child: ListTile(
-          leading: CircleAvatar(
-            radius: 26,
-            foregroundImage: FileImage(place.image),
+          leading: Hero(
+            tag: place.id,
+            child: CircleAvatar(
+              radius: 26,
+              foregroundImage: FileImage(place.image),
+              backgroundImage: MemoryImage(kTransparentImage),
+            ),
           ),
           title: Text(
             place.title,

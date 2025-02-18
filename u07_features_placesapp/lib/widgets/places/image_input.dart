@@ -50,7 +50,7 @@ class _ImageInputState extends State<ImageInput> {
           color: buttonColor.withValues(alpha: 0.2),
         ),
       ),
-      height: 250,
+      height: 170,
       width: double.infinity,
       alignment: Alignment.center,
       child: Column(
@@ -63,7 +63,7 @@ class _ImageInputState extends State<ImageInput> {
               children: [
                 Icon(
                   Icons.camera,
-                  size: 50,
+                  size: 42,
                   color: buttonColor,
                 ),
                 const SizedBox(height: 8),
