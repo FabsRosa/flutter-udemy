@@ -19,7 +19,7 @@ class NewPlaceScreen extends ConsumerStatefulWidget {
 class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   var _enteredTitle = '';
-  File? _takenImage;
+  File? _selectedImage;
   PlaceLocation? _selectedLocation;
 
   void _saveForm() {
@@ -29,13 +29,126 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
       ref.read(placesProvider.notifier).addPlace(
             Place(
               title: _enteredTitle,
-              image: _takenImage!,
+              image: _selectedImage!,
               location: _selectedLocation!,
             ),
           );
 
       Navigator.of(context).pop();
     }
+  }
+
+  Widget get _titleTextField {
+    return TextFormField(
+      maxLength: 50,
+      decoration: const InputDecoration(
+        label: Text('Title'),
+      ),
+      autofocus: true,
+      autovalidateMode: AutovalidateMode.onUnfocus,
+      validator: (value) {
+        if (value == null ||
+            value.isEmpty ||
+            value.trim().length <= 1 ||
+            value.trim().length > 50) {
+          return 'Must be between 1 and 50 characters.';
+        }
+        return null;
+      },
+      onSaved: (value) {
+        _enteredTitle = value!;
+      },
+    );
+  }
+
+  Widget get _locationField {
+    return FormField<PlaceLocation>(
+      builder: (state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            LocationInput(
+              onPickLocation: (location) {
+                _selectedLocation = location;
+                state.didChange(location);
+              },
+              hasError: state.hasError,
+            ),
+            if (state.hasError)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  state.errorText!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
+      validator: (value) {
+        if (_selectedLocation == null) {
+          return 'A location must be defined.';
+        } else {
+          return null;
+        }
+      },
+    );
+  }
+
+  Widget get _imageField {
+    return FormField<File>(
+      builder: (state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ImageInput(
+              hasError: state.hasError,
+              onPickImage: (image) {
+                _selectedImage = image;
+                state.didChange(image);
+              },
+            ),
+            if (state.hasError)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  state.errorText!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
+      validator: (value) {
+        if (_selectedImage == null) {
+          return 'A picture must be selected.';
+        } else {
+          return null;
+        }
+      },
+    );
+  }
+
+  Widget get _saveButton {
+    return ElevatedButton.icon(
+      onPressed: _saveForm,
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.all(
+          Theme.of(context).colorScheme.primaryContainer,
+        ),
+        foregroundColor: WidgetStateProperty.all(
+          Theme.of(context).colorScheme.onPrimaryContainer,
+        ),
+      ),
+      icon: const Icon(Icons.check),
+      label: const Text('Save'),
+    );
   }
 
   @override
@@ -54,114 +167,16 @@ class _NewPlaceScreenState extends ConsumerState<NewPlaceScreen> {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                maxLength: 50,
-                decoration: const InputDecoration(
-                  label: Text('Title'),
-                ),
-                autofocus: true,
-                autovalidateMode: AutovalidateMode.onUnfocus,
-                validator: (value) {
-                  if (value == null ||
-                      value.isEmpty ||
-                      value.trim().length <= 1 ||
-                      value.trim().length > 50) {
-                    return 'Must be between 1 and 50 characters.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _enteredTitle = value!;
-                },
-              ),
+              _titleTextField,
               const SizedBox(height: 24),
-              FormField<PlaceLocation>(
-                builder: (state) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      LocationInput(
-                        onPickLocation: (location) {
-                          _selectedLocation = location;
-                          state.didChange(location);
-                        },
-                        hasError: state.hasError,
-                      ),
-                      if (state.hasError)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            state.errorText!,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.error,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
-                },
-                validator: (value) {
-                  if (_selectedLocation == null) {
-                    return 'A location must be defined.';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
+              _locationField,
               const SizedBox(height: 24),
-              FormField<File>(
-                builder: (state) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ImageInput(
-                        hasError: state.hasError,
-                        onPickImage: (image) {
-                          _takenImage = image;
-                          state.didChange(image);
-                        },
-                      ),
-                      if (state.hasError)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            state.errorText!,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.error,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
-                },
-                validator: (value) {
-                  if (_takenImage == null) {
-                    return 'A picture must be taken.';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
+              _imageField,
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  const Spacer(),
-                  ElevatedButton.icon(
-                    onPressed: _saveForm,
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                        Theme.of(context).colorScheme.primaryContainer,
-                      ),
-                      foregroundColor: WidgetStateProperty.all(
-                        Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
-                    ),
-                    icon: const Icon(Icons.check),
-                    label: const Text('Save'),
-                  ),
+                  _saveButton,
                 ],
               )
             ],

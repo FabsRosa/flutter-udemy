@@ -18,7 +18,15 @@ class ImageInput extends StatefulWidget {
 }
 
 class _ImageInputState extends State<ImageInput> {
-  File? _takenImage;
+  File? _selectedImage;
+
+  Color get buttonColor {
+    if (widget.hasError) {
+      return Theme.of(context).colorScheme.error;
+    } else {
+      return Theme.of(context).colorScheme.primary;
+    }
+  }
 
   void _takePicture() async {
     final imagePicker = ImagePicker();
@@ -32,17 +40,13 @@ class _ImageInputState extends State<ImageInput> {
     } else {}
 
     setState(() {
-      _takenImage = File(pickedImage.path);
+      _selectedImage = File(pickedImage.path);
     });
 
-    widget.onPickImage(_takenImage!);
+    widget.onPickImage(_selectedImage!);
   }
 
-  Widget _emptyPictureButton() {
-    final buttonColor = widget.hasError
-        ? Theme.of(context).colorScheme.error
-        : Theme.of(context).colorScheme.primary;
-
+  Widget get _emptyPictureButton {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -82,7 +86,7 @@ class _ImageInputState extends State<ImageInput> {
     );
   }
 
-  Widget _takenPictureButton() {
+  Widget get _selectedPictureButton {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -95,7 +99,7 @@ class _ImageInputState extends State<ImageInput> {
       child: GestureDetector(
         onTap: _takePicture,
         child: Image.file(
-          _takenImage!,
+          _selectedImage!,
           fit: BoxFit.cover,
           width: double.infinity,
         ),
@@ -106,7 +110,7 @@ class _ImageInputState extends State<ImageInput> {
   @override
   Widget build(BuildContext context) {
     Widget buttonContent =
-        _takenImage == null ? _emptyPictureButton() : _takenPictureButton();
+        _selectedImage == null ? _emptyPictureButton : _selectedPictureButton;
 
     return buttonContent;
   }

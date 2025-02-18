@@ -26,6 +26,14 @@ class _LocationInputState extends State<LocationInput> {
   var _isGettingLocation = false;
   final apiKey = 'AIzaSyBIle6TDQROYB3EFh0HNgTLrVbqmpV2N5I';
 
+  Color get buttonColor {
+    if (widget.hasError) {
+      return Theme.of(context).colorScheme.error;
+    } else {
+      return Theme.of(context).colorScheme.primary;
+    }
+  }
+
   String get locationImage {
     if (_pickedLocation == null ||
         _pickedLocation?.latitude == null ||
@@ -37,11 +45,13 @@ class _LocationInputState extends State<LocationInput> {
     return 'https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:%7C$latitude,$longitude&key=$apiKey';
   }
 
-  Widget _locationPreview({required Color buttonColor}) {
+  Widget get _locationPreview {
     late Widget containerContent;
     if (_isGettingLocation) {
+      // Loading...
       containerContent = const CircularProgressIndicator();
     } else if (_pickedLocation != null) {
+      // Map snapshot
       containerContent = FadeInImage(
         placeholder: MemoryImage(kTransparentImage),
         image: NetworkImage(locationImage),
@@ -50,6 +60,7 @@ class _LocationInputState extends State<LocationInput> {
         width: double.infinity,
       );
     } else {
+      // Field empty
       containerContent = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -84,7 +95,7 @@ class _LocationInputState extends State<LocationInput> {
     );
   }
 
-  Widget _currentLocationButton({required Color buttonColor}) {
+  Widget get _currentLocationButton {
     return TextButton.icon(
       icon: Icon(
         Icons.my_location,
@@ -155,7 +166,7 @@ class _LocationInputState extends State<LocationInput> {
     widget.onPickLocation(_pickedLocation!);
   }
 
-  Widget _selectOnMapButton({required Color buttonColor}) {
+  Widget get _selectOnMapButton {
     return TextButton.icon(
       icon: Icon(
         Icons.map,
@@ -174,20 +185,16 @@ class _LocationInputState extends State<LocationInput> {
 
   @override
   Widget build(BuildContext context) {
-    final buttonColor = widget.hasError
-        ? Theme.of(context).colorScheme.error
-        : Theme.of(context).colorScheme.primary;
-
     return Container(
       alignment: Alignment.center,
       child: Column(
         children: [
-          _locationPreview(buttonColor: buttonColor),
+          _locationPreview,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _currentLocationButton(buttonColor: buttonColor),
-              _selectOnMapButton(buttonColor: buttonColor),
+              _currentLocationButton,
+              _selectOnMapButton,
             ],
           )
         ],

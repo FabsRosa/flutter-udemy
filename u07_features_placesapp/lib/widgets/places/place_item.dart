@@ -69,6 +69,12 @@ class PlaceItem extends ConsumerWidget {
           title: Text(
             place.title,
           ),
+          subtitle: Text(
+            place.location.address,
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+          ),
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
