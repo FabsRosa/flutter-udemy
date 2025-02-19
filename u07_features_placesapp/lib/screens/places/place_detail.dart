@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'package:u07_features_placesapp/models/place.dart';
+import 'package:u07_features_placesapp/screens/places/map.dart';
 import 'package:u07_features_placesapp/themes/main_theme.dart';
 
 class PlaceDetailScreen extends StatelessWidget {
@@ -44,10 +45,22 @@ class PlaceDetailScreen extends StatelessWidget {
             right: 0,
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 70,
-                  backgroundImage: MemoryImage(kTransparentImage),
-                  foregroundImage: NetworkImage(locationImage),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) => MapScreen(
+                          location: place.location,
+                          isSelecting: false,
+                        ),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 70,
+                    backgroundImage: MemoryImage(kTransparentImage),
+                    foregroundImage: NetworkImage(locationImage),
+                  ),
                 ),
                 Container(
                   alignment: Alignment.center,
