@@ -23,9 +23,11 @@ class PlaceDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(place.title),
-        backgroundColor: kSeedColor,
+        backgroundColor: kSeedColor.withValues(alpha: 0.5),
+        elevation: 0,
       ),
       body: Stack(
         children: [

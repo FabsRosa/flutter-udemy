@@ -5,18 +5,24 @@ import 'package:u07_features_placesapp/themes/main_theme.dart';
 import 'package:u07_features_placesapp/providers/places_provider.dart';
 import 'package:u07_features_placesapp/screens/places/new_place.dart';
 import 'package:u07_features_placesapp/widgets/places/places_list.dart';
-// import 'package:u07_features_placesapp/widgets/main_bottom_navigation_bar.dart';
-// import 'package:u07_features_placesapp/widgets/main_drawer.dart';
 
-class PlacesScreen extends ConsumerWidget {
+class PlacesScreen extends ConsumerStatefulWidget {
   const PlacesScreen({
     super.key,
-    // required this.selectedPageIndex,
-    // required this.onSelectPage,
   });
 
-  // final int selectedPageIndex;
-  // final void Function(int index) onSelectPage;
+  @override
+  ConsumerState<PlacesScreen> createState() => _PlacesScreenState();
+}
+
+class _PlacesScreenState extends ConsumerState<PlacesScreen> {
+  late Future<void> _placesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _placesFuture = ref.read(placesProvider.notifier).loadPlaces();
+  }
 
   void _onAddButton({required BuildContext context}) {
     Navigator.of(context).push(
@@ -27,7 +33,7 @@ class PlacesScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final places = ref.watch(placesProvider);
 
     return Scaffold(
@@ -45,14 +51,16 @@ class PlacesScreen extends ConsumerWidget {
           ),
         ],
       ),
-      /* drawer: MainDrawer(),
-      bottomNavigationBar: MainBottomNavigationBar(
-        selectedPageIndex: selectedPageIndex,
-        onSelectPage: onSelectPage,
-        // onAddButton: () => _onAddButton(context: context),
-      ), */
-      body: PlacesList(
-        places: places,
+      body: FutureBuilder(
+        future: _placesFuture,
+        builder: (context, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : PlacesList(
+                    places: places,
+                  ),
       ),
     );
   }
