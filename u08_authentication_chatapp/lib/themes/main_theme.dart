@@ -23,6 +23,10 @@ class MainTheme {
     ),
     colorScheme: kColorSchemeDark,
     scaffoldBackgroundColor: kSeedColor,
+    appBarTheme: AppBarTheme(
+      backgroundColor: kSeedColor,
+      foregroundColor: Colors.white,
+    ),
   );
 
   static PreferredSizeWidget gradientAppBar(
