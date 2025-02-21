@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const kSeedColor = Color.fromARGB(255, 18, 18, 18);
+const kSeedColor = Color.fromARGB(255, 99, 150, 255);
+const kSeedColorBrighter = Color.fromARGB(255, 183, 207, 255);
+const kGradient1 = Color.fromARGB(255, 124, 255, 207);
+const kGradient1Brighter = Color.fromARGB(255, 182, 255, 228);
+const kGradient2 = Color.fromARGB(255, 167, 102, 255);
+const kGradient2Brighter = Color.fromARGB(255, 214, 184, 255);
+const kBackgroundColor = Color.fromARGB(255, 18, 18, 18);
 
 final kColorSchemeDark = ColorScheme.fromSeed(
   seedColor: kSeedColor,
@@ -28,9 +34,9 @@ class MainTheme {
       ),
     ),
     colorScheme: kColorSchemeDark,
-    scaffoldBackgroundColor: kSeedColor,
+    scaffoldBackgroundColor: kBackgroundColor,
     appBarTheme: AppBarTheme(
-      backgroundColor: kSeedColor,
+      backgroundColor: kBackgroundColor,
       foregroundColor: Colors.white,
     ),
   );
