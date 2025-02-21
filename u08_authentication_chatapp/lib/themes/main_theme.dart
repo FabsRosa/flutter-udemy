@@ -21,6 +21,12 @@ class MainTheme {
       bodyLarge: TextStyle(color: Colors.white),
       bodyMedium: TextStyle(color: Colors.white),
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.all(kColorSchemeDark.primary),
+        foregroundColor: WidgetStateProperty.all(kColorSchemeDark.onPrimary),
+      ),
+    ),
     colorScheme: kColorSchemeDark,
     scaffoldBackgroundColor: kSeedColor,
     appBarTheme: AppBarTheme(
