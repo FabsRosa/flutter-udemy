@@ -11,6 +11,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   late FocusNode _passwordFocusNode;
 
@@ -28,58 +29,87 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget get _logo {
-    return Container(
-      margin: const EdgeInsets.only(
-        top: 30,
-        bottom: 00,
-        left: 20,
-        right: 20,
+    return Hero(
+      tag: 'main_logo',
+      child: Container(
+        margin: const EdgeInsets.only(
+          top: 30,
+          bottom: 00,
+          left: 20,
+          right: 20,
+        ),
+        width: 200,
+        child: Image.asset('assets/images/chat.png'),
       ),
-      width: 200,
-      child: Image.asset('assets/images/chat.png'),
     );
   }
 
   Widget get _emailField {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Email',
-        prefixIcon: Icon(
-          Icons.mail_lock_outlined,
-          color: kGradient1Brighter,
+    return Hero(
+      tag: 'email_field',
+      child: Material(
+        type: MaterialType.transparency,
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Email',
+            prefixIcon: Icon(
+              Icons.mail_lock_outlined,
+              color: kGradient1Brighter,
+            ),
+          ),
+          keyboardType: TextInputType.emailAddress,
+          autocorrect: false,
+          textCapitalization: TextCapitalization.none,
+          validator: (value) {
+            if (value == null || value.trim().isEmpty || !value.contains('@')) {
+              return 'Please enter a valid email address';
+            }
+            return null;
+          },
         ),
       ),
-      keyboardType: TextInputType.emailAddress,
-      autocorrect: false,
-      textCapitalization: TextCapitalization.none,
     );
   }
 
   Widget get _passwordField {
-    return TextFormField(
-      focusNode: _passwordFocusNode,
-      decoration: InputDecoration(
-        labelText: 'Password',
-        prefixIcon: const Icon(
-          Icons.lock_person_outlined,
-          color: kGradient1Brighter,
+    return Hero(
+      tag: 'password_field',
+      child: Material(
+        type: MaterialType.transparency,
+        child: TextFormField(
+          focusNode: _passwordFocusNode,
+          decoration: InputDecoration(
+            labelText: 'Password',
+            prefixIcon: const Icon(
+              Icons.lock_person_outlined,
+              color: kGradient1Brighter,
+            ),
+            suffixIcon: _passwordFocusNode.hasFocus
+                ? IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_rounded,
+                      color: kGradient2Brighter,
+                    ),
+                    onPressed: () => setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    }),
+                  )
+                : null,
+          ),
+          obscureText: _obscurePassword,
+          keyboardType: TextInputType.visiblePassword,
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Please enter a password';
+            } else if (value.trim().length < 8) {
+              return 'The password should be longer than 8 characters';
+            }
+            return null;
+          },
         ),
-        suffixIcon: _passwordFocusNode.hasFocus
-            ? IconButton(
-                icon: Icon(
-                  _obscurePassword
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_rounded,
-                  color: kGradient2Brighter,
-                ),
-                onPressed: () => setState(() {
-                  _obscurePassword = !_obscurePassword;
-                }),
-              )
-            : null,
       ),
-      obscureText: _obscurePassword,
-      keyboardType: TextInputType.visiblePassword,
     );
   }
 
@@ -94,8 +124,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return TextButton(
       onPressed: () {
         Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (ctx) => SignUpScreen(),
+          SlidePageRoute(
+            child: SignUpScreen(),
           ),
         );
       },
@@ -124,7 +154,6 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             _logo,
             Container(
-              color: kBackgroundColor,
               margin: const EdgeInsets.all(20),
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -134,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       _emailField,
                       const SizedBox(height: 24),
                       _passwordField,
-                      const SizedBox(height: 64),
+                      const SizedBox(height: 48),
                       _signInButton,
                       const SizedBox(height: 6),
                       _signUpButton(context),
