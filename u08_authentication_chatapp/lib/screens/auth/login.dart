@@ -79,7 +79,9 @@ class _LoginScreenState extends State<LoginScreen> {
           autocorrect: false,
           textCapitalization: TextCapitalization.none,
           validator: (value) {
-            if (value == null || value.trim().isEmpty || !value.contains('@')) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Please enter an email address';
+            } else if (!value.contains('@')) {
               return 'Please enter a valid email address';
             }
             return null;
@@ -123,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
             if (value == null || value.trim().isEmpty) {
               return 'Please enter a password';
             } else if (value.trim().length < 8) {
-              return 'The password should be longer than 8 characters';
+              return 'The password must be at least 8 characters long';
             }
             return null;
           },
@@ -134,14 +136,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget get _signInButton {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: _signInSubmit,
       child: const Text('Sign In'),
     );
   }
 
+  void _signInSubmit() {
+    final isValid = _formKey.currentState!.validate();
+    if (isValid) {
+      _formKey.currentState!.save();
+    }
+  }
+
   Widget _signUpButton(context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () {
+        _onTapSignUp(context);
+      },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -182,6 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     children: [
                       _emailField,
