@@ -4,8 +4,14 @@ import 'package:u08_authentication_chatapp/themes/main_theme.dart';
 import 'package:u08_authentication_chatapp/widgets/nav/slide_page_route.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({
+    super.key,
+    this.emailInitialText = '',
+    this.passwordInitialText = '',
+  });
 
+  final String emailInitialText;
+  final String passwordInitialText;
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -13,18 +19,29 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
-  late FocusNode _passwordFocusNode;
+  late final FocusNode _passwordFocusNode;
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
 
   @override
   void initState() {
     super.initState();
     _passwordFocusNode = FocusNode();
     _passwordFocusNode.addListener(() => setState(() {}));
+
+    _emailController = TextEditingController(
+      text: widget.emailInitialText,
+    );
+    _passwordController = TextEditingController(
+      text: widget.passwordInitialText,
+    );
   }
 
   @override
   void dispose() {
     _passwordFocusNode.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -50,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Material(
         type: MaterialType.transparency,
         child: TextFormField(
+          controller: _emailController,
           decoration: InputDecoration(
             labelText: 'Email',
             prefixIcon: Icon(
@@ -77,6 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Material(
         type: MaterialType.transparency,
         child: TextFormField(
+          controller: _passwordController,
           focusNode: _passwordFocusNode,
           decoration: InputDecoration(
             labelText: 'Password',
@@ -122,13 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _signUpButton(context) {
     return TextButton(
-      onPressed: () {
-        Navigator.of(context).push(
-          SlidePageRoute(
-            child: SignUpScreen(),
-          ),
-        );
-      },
+      onPressed: () {},
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -138,6 +151,17 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           Text(' Sign up.'),
         ],
+      ),
+    );
+  }
+
+  void _onTapSignUp(context) async {
+    Navigator.of(context).push(
+      SlidePageRoute(
+        child: SignUpScreen(
+          emailInitialText: _emailController.text,
+          passwordInitialText: _passwordController.text,
+        ),
       ),
     );
   }

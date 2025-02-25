@@ -4,7 +4,12 @@ import 'package:u08_authentication_chatapp/themes/main_theme.dart';
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
     super.key,
+    this.emailInitialText = '',
+    this.passwordInitialText = '',
   });
+
+  final String emailInitialText;
+  final String passwordInitialText;
 
   @override
   State<StatefulWidget> createState() => _SignUpScreenState();
@@ -16,6 +21,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscureRepeatPassword = true;
   late FocusNode _passwordFocusNode;
   late FocusNode _repeatPasswordFocusNode;
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
 
   @override
   void initState() {
@@ -24,6 +31,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _passwordFocusNode.addListener(() => setState(() {}));
     _repeatPasswordFocusNode = FocusNode();
     _repeatPasswordFocusNode.addListener(() => setState(() {}));
+
+    _emailController = TextEditingController(
+      text: widget.emailInitialText,
+    );
+    _passwordController = TextEditingController(
+      text: widget.passwordInitialText,
+    );
   }
 
   @override
@@ -55,6 +69,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Material(
         type: MaterialType.transparency,
         child: TextFormField(
+          controller: _emailController,
           decoration: InputDecoration(
             labelText: 'Email',
             prefixIcon: Icon(
@@ -91,6 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Material(
         type: MaterialType.transparency,
         child: TextFormField(
+          controller: _passwordController,
           focusNode: _passwordFocusNode,
           decoration: InputDecoration(
             labelText: 'Password',
