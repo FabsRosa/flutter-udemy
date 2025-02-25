@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:u08_authentication_chatapp/screens/auth/signup.dart';
 import 'package:u08_authentication_chatapp/themes/main_theme.dart';
-import 'package:u08_authentication_chatapp/widgets/nav/slide_page_route.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({
     super.key,
     this.emailInitialText = '',
     this.passwordInitialText = '',
@@ -12,14 +10,17 @@ class LoginScreen extends StatefulWidget {
 
   final String emailInitialText;
   final String passwordInitialText;
+
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<StatefulWidget> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
-  late final FocusNode _passwordFocusNode;
+  bool _obscureRepeatPassword = true;
+  late FocusNode _passwordFocusNode;
+  late FocusNode _repeatPasswordFocusNode;
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
 
@@ -28,6 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     _passwordFocusNode = FocusNode();
     _passwordFocusNode.addListener(() => setState(() {}));
+    _repeatPasswordFocusNode = FocusNode();
+    _repeatPasswordFocusNode.addListener(() => setState(() {}));
 
     _emailController = TextEditingController(
       text: widget.emailInitialText,
@@ -40,8 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     _passwordFocusNode.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
+    _repeatPasswordFocusNode.dispose();
     super.dispose();
   }
 
@@ -55,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
           left: 20,
           right: 20,
         ),
-        width: 200,
+        width: 140,
         child: Image.asset('assets/images/chat.png'),
       ),
     );
@@ -78,16 +80,23 @@ class _LoginScreenState extends State<LoginScreen> {
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
           textCapitalization: TextCapitalization.none,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Please enter an email address';
-            } else if (!value.contains('@')) {
-              return 'Please enter a valid email address';
-            }
-            return null;
-          },
         ),
       ),
+    );
+  }
+
+  Widget get _repeatEmailField {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Repeat Email',
+        prefixIcon: Icon(
+          Icons.mail_lock_outlined,
+          color: kSeedColorBrighter,
+        ),
+      ),
+      keyboardType: TextInputType.emailAddress,
+      autocorrect: false,
+      textCapitalization: TextCapitalization.none,
     );
   }
 
@@ -121,59 +130,43 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           obscureText: _obscurePassword,
           keyboardType: TextInputType.visiblePassword,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Please enter a password';
-            } else if (value.trim().length < 8) {
-              return 'The password must be at least 8 characters long';
-            }
-            return null;
-          },
         ),
       ),
     );
   }
 
-  Widget get _signInButton {
+  Widget get _repeatPasswordField {
+    return TextFormField(
+      focusNode: _repeatPasswordFocusNode,
+      decoration: InputDecoration(
+        labelText: 'Repeat Password',
+        prefixIcon: const Icon(
+          Icons.lock_person_outlined,
+          color: kSeedColorBrighter,
+        ),
+        suffixIcon: _repeatPasswordFocusNode.hasFocus
+            ? IconButton(
+                icon: Icon(
+                  _obscureRepeatPassword
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_rounded,
+                  color: kGradient2Brighter,
+                ),
+                onPressed: () => setState(() {
+                  _obscureRepeatPassword = !_obscureRepeatPassword;
+                }),
+              )
+            : null,
+      ),
+      obscureText: _obscureRepeatPassword,
+      keyboardType: TextInputType.visiblePassword,
+    );
+  }
+
+  Widget get _signUpButton {
     return ElevatedButton(
-      onPressed: _signInSubmit,
-      child: const Text('Sign In'),
-    );
-  }
-
-  void _signInSubmit() {
-    final isValid = _formKey.currentState!.validate();
-    if (isValid) {
-      _formKey.currentState!.save();
-    }
-  }
-
-  Widget _signUpButton(context) {
-    return TextButton(
-      onPressed: () {
-        _onTapSignUp(context);
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Don\'t have an account?',
-            style: TextStyle(color: Colors.white),
-          ),
-          Text(' Sign up.'),
-        ],
-      ),
-    );
-  }
-
-  void _onTapSignUp(context) async {
-    Navigator.of(context).push(
-      SlidePageRoute(
-        child: SignUpScreen(
-          emailInitialText: _emailController.text,
-          passwordInitialText: _passwordController.text,
-        ),
-      ),
+      onPressed: () {},
+      child: const Text('Sign Up'),
     );
   }
 
@@ -181,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign In'),
+        title: Text('Sign Up'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -197,12 +190,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children: [
                       _emailField,
+                      const SizedBox(height: 12),
+                      _repeatEmailField,
                       const SizedBox(height: 24),
                       _passwordField,
+                      const SizedBox(height: 12),
+                      _repeatPasswordField,
                       const SizedBox(height: 48),
-                      _signInButton,
+                      _signUpButton,
                       const SizedBox(height: 6),
-                      _signUpButton(context),
+                      // _signUpButton(context),
                     ],
                   ),
                 ),
