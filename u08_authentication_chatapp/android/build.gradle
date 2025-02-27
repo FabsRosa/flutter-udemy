@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        google()  // <-- Add this
+        mavenCentral()  // <-- Add this
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.1'  // Existing Gradle plugin
+        classpath 'com.google.gms:google-services:4.4.1'  // Google Services plugin
+        // Add other classpaths here (e.g., Kotlin, Crashlytics)
+    }
+}
+
 allprojects {
     repositories {
         google()

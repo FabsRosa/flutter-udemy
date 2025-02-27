@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "244705856059",
+    "project_id": "u08-authentication-chatapp",
+    "storage_bucket": "u08-authentication-chatapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:244705856059:android:f85d9ae50947c5605dea1e",
+        "android_client_info": {
+          "package_name": "com.example.u08_authentication_chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkQ7bO_OCDwON5XhmODPFenwLDtJdIXso"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
