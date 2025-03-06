@@ -24,7 +24,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Device Features',
+      title: 'Authentication',
       theme: MainTheme.darkTheme,
       home: MainScreen(),
     );

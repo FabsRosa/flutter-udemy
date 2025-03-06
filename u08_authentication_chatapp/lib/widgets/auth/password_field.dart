@@ -5,9 +5,13 @@ class PasswordField extends StatefulWidget {
   const PasswordField({
     super.key,
     required this.passwordController,
+    this.color = kGradient1Brighter,
+    this.eyeColor = kGradient2Brighter,
   });
 
   final TextEditingController passwordController;
+  final Color color;
+  final Color eyeColor;
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
@@ -41,9 +45,9 @@ class _PasswordFieldState extends State<PasswordField> {
           focusNode: _passwordFocusNode,
           decoration: InputDecoration(
             labelText: 'Password',
-            prefixIcon: const Icon(
+            prefixIcon: Icon(
               Icons.lock_person_outlined,
-              color: kGradient1Brighter,
+              color: widget.color,
             ),
             suffixIcon: _passwordFocusNode.hasFocus
                 ? IconButton(
@@ -51,7 +55,7 @@ class _PasswordFieldState extends State<PasswordField> {
                       _obscurePassword
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_rounded,
-                      color: kGradient2Brighter,
+                      color: widget.eyeColor,
                     ),
                     onPressed: () => setState(() {
                       _obscurePassword = !_obscurePassword;

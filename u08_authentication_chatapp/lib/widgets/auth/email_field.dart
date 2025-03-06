@@ -5,9 +5,11 @@ class EmailField extends StatelessWidget {
   const EmailField({
     super.key,
     required this.emailController,
+    this.color = kGradient1Brighter,
   });
 
   final TextEditingController emailController;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class EmailField extends StatelessWidget {
             labelText: 'Email',
             prefixIcon: Icon(
               Icons.mail_lock_outlined,
-              color: kGradient1Brighter,
+              color: color,
             ),
           ),
           keyboardType: TextInputType.emailAddress,

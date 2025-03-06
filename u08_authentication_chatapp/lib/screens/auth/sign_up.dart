@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:u08_authentication_chatapp/themes/main_theme.dart';
 
+import 'package:u08_authentication_chatapp/widgets/auth/email_field.dart';
+import 'package:u08_authentication_chatapp/widgets/auth/password_field.dart';
+import 'package:u08_authentication_chatapp/models/firebase_connection.dart';
+import 'package:u08_authentication_chatapp/widgets/user_image_picker.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
     super.key,
@@ -17,21 +22,12 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  bool _obscurePassword = true;
-  bool _obscureRepeatPassword = true;
-  late FocusNode _passwordFocusNode;
-  late FocusNode _repeatPasswordFocusNode;
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
 
   @override
   void initState() {
     super.initState();
-    _passwordFocusNode = FocusNode();
-    _passwordFocusNode.addListener(() => setState(() {}));
-    _repeatPasswordFocusNode = FocusNode();
-    _repeatPasswordFocusNode.addListener(() => setState(() {}));
-
     _emailController = TextEditingController(
       text: widget.emailInitialText,
     );
@@ -42,8 +38,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    _passwordFocusNode.dispose();
-    _repeatPasswordFocusNode.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -63,111 +59,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget get _emailField {
-    return Hero(
-      tag: 'email_field',
-      child: Material(
-        type: MaterialType.transparency,
-        child: TextFormField(
-          controller: _emailController,
-          decoration: InputDecoration(
-            labelText: 'Email',
-            prefixIcon: Icon(
-              Icons.mail_lock_outlined,
-              color: kGradient1Brighter,
-            ),
-          ),
-          keyboardType: TextInputType.emailAddress,
-          autocorrect: false,
-          textCapitalization: TextCapitalization.none,
-        ),
-      ),
-    );
-  }
-
-  Widget get _repeatEmailField {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Repeat Email',
-        prefixIcon: Icon(
-          Icons.mail_lock_outlined,
-          color: kSeedColorBrighter,
-        ),
-      ),
-      keyboardType: TextInputType.emailAddress,
-      autocorrect: false,
-      textCapitalization: TextCapitalization.none,
-    );
-  }
-
-  Widget get _passwordField {
-    return Hero(
-      tag: 'password_field',
-      child: Material(
-        type: MaterialType.transparency,
-        child: TextFormField(
-          controller: _passwordController,
-          focusNode: _passwordFocusNode,
-          decoration: InputDecoration(
-            labelText: 'Password',
-            prefixIcon: const Icon(
-              Icons.lock_person_outlined,
-              color: kGradient1Brighter,
-            ),
-            suffixIcon: _passwordFocusNode.hasFocus
-                ? IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_rounded,
-                      color: kGradient2Brighter,
-                    ),
-                    onPressed: () => setState(() {
-                      _obscurePassword = !_obscurePassword;
-                    }),
-                  )
-                : null,
-          ),
-          obscureText: _obscurePassword,
-          keyboardType: TextInputType.visiblePassword,
-        ),
-      ),
-    );
-  }
-
-  Widget get _repeatPasswordField {
-    return TextFormField(
-      focusNode: _repeatPasswordFocusNode,
-      decoration: InputDecoration(
-        labelText: 'Repeat Password',
-        prefixIcon: const Icon(
-          Icons.lock_person_outlined,
-          color: kSeedColorBrighter,
-        ),
-        suffixIcon: _repeatPasswordFocusNode.hasFocus
-            ? IconButton(
-                icon: Icon(
-                  _obscureRepeatPassword
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_rounded,
-                  color: kGradient2Brighter,
-                ),
-                onPressed: () => setState(() {
-                  _obscureRepeatPassword = !_obscureRepeatPassword;
-                }),
-              )
-            : null,
-      ),
-      obscureText: _obscureRepeatPassword,
-      keyboardType: TextInputType.visiblePassword,
-    );
-  }
-
   Widget get _signUpButton {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: _signUpSubmit,
       child: const Text('Sign Up'),
     );
+  }
+
+  void _signUpSubmit() async {
+    final isValid = _formKey.currentState!.validate();
+    if (isValid) {
+      _formKey.currentState!.save();
+      await FirebaseConnection.signUp(
+        context: context,
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+    }
   }
 
   @override
@@ -180,7 +88,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _logo,
             Container(
               margin: const EdgeInsets.all(20),
               child: Padding(
@@ -189,17 +96,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      _emailField,
-                      const SizedBox(height: 12),
-                      _repeatEmailField,
+                      UserImagePicker(),
                       const SizedBox(height: 24),
-                      _passwordField,
-                      const SizedBox(height: 12),
-                      _repeatPasswordField,
+                      EmailField(
+                          emailController: _emailController,
+                          color: kGradient2Brighter),
+                      const SizedBox(height: 24),
+                      PasswordField(
+                        passwordController: _passwordController,
+                        color: kGradient2Brighter,
+                        eyeColor: kGradient1Brighter,
+                      ),
                       const SizedBox(height: 48),
                       _signUpButton,
-                      const SizedBox(height: 6),
-                      // _signUpButton(context),
                     ],
                   ),
                 ),

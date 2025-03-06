@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:u08_authentication_chatapp/widgets/sign_in/email_field.dart';
-import 'package:u08_authentication_chatapp/widgets/sign_in/password_field.dart';
-import 'package:u08_authentication_chatapp/widgets/sign_in/sign_up_button.dart';
+
+import 'package:u08_authentication_chatapp/models/firebase_connection.dart';
+import 'package:u08_authentication_chatapp/widgets/auth/email_field.dart';
+import 'package:u08_authentication_chatapp/widgets/auth/password_field.dart';
+import 'package:u08_authentication_chatapp/widgets/auth/sign_up_button.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -45,10 +47,15 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void _signInSubmit() {
+  void _signInSubmit() async {
     final isValid = _formKey.currentState!.validate();
     if (isValid) {
       _formKey.currentState!.save();
+      await FirebaseConnection.signIn(
+        context: context,
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
     }
   }
 
