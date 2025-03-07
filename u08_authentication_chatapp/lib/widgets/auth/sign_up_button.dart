@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:u08_authentication_chatapp/screens/auth/sign_up.dart';
-import 'package:u08_authentication_chatapp/widgets/nav/slide_page_route.dart';
 
 class SignUpButton extends StatelessWidget {
   const SignUpButton({
@@ -14,8 +13,8 @@ class SignUpButton extends StatelessWidget {
 
   void _onTapSignUp(BuildContext context) async {
     Navigator.of(context).push(
-      SlidePageRoute(
-        child: SignUpScreen(
+      MaterialPageRoute(
+        builder: (ctx) => SignUpScreen(
           emailInitialText: emailController.text,
           passwordInitialText: passwordController.text,
         ),

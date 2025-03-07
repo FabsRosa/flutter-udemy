@@ -13,6 +13,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  var _isAuthenticating = false;
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -50,56 +51,86 @@ class _SignInScreenState extends State<SignInScreen> {
   void _signInSubmit() async {
     final isValid = _formKey.currentState!.validate();
     if (isValid) {
-      _formKey.currentState!.save();
-      await FirebaseConnection.signIn(
-        context: context,
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
+      try {
+        setState(() {
+          _isAuthenticating = true;
+        });
+        _formKey.currentState!.save();
+        await FirebaseConnection.signIn(
+          scaffoldMessenger: ScaffoldMessenger.of(context),
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+        setState(() {
+          _isAuthenticating = false;
+        });
+      } catch (error) {
+        setState(() {
+          _isAuthenticating = false;
+        });
+      }
     }
+  }
+
+  Widget get _bodyContent {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _logo,
+          Container(
+            margin: const EdgeInsets.all(20),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    EmailField(
+                      emailController: _emailController,
+                    ),
+                    const SizedBox(height: 24),
+                    PasswordField(
+                      passwordController: _passwordController,
+                    ),
+                    const SizedBox(height: 48),
+                    _signInButton,
+                    const SizedBox(height: 6),
+                    SignUpButton(
+                      emailController: _emailController,
+                      passwordController: _passwordController,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get _loading {
+    return SizedBox(
+      height: double.infinity,
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          const SizedBox(height: 16),
+          Text('Logging in'),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sign In'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _logo,
-            Container(
-              margin: const EdgeInsets.all(20),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      EmailField(
-                        emailController: _emailController,
-                      ),
-                      const SizedBox(height: 24),
-                      PasswordField(
-                        passwordController: _passwordController,
-                      ),
-                      const SizedBox(height: 48),
-                      _signInButton,
-                      const SizedBox(height: 6),
-                      SignUpButton(
-                        emailController: _emailController,
-                        passwordController: _passwordController,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: AppBar(),
+      body: _isAuthenticating ? _loading : _bodyContent,
     );
   }
 }

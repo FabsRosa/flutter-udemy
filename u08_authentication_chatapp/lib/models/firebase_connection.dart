@@ -1,20 +1,32 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 final _firebase = FirebaseAuth.instance;
 
 class FirebaseConnection {
   static Future<UserCredential?> signUp({
-    required BuildContext context,
+    required ScaffoldMessengerState scaffoldMessenger,
     required String email,
     required String password,
+    required File selectedImage,
   }) async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
       final userCredentials = await _firebase.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('user_images')
+          .child('${userCredentials.user!.uid}.jpg');
+
+      await storageRef.putFile(selectedImage);
+      final imageUrl = await storageRef.getDownloadURL();
+
       return userCredentials;
     } on FirebaseAuthException catch (error) {
       presentErrorOnSnackBar(
@@ -26,11 +38,10 @@ class FirebaseConnection {
   }
 
   static Future<UserCredential?> signIn({
-    required BuildContext context,
+    required ScaffoldMessengerState scaffoldMessenger,
     required String email,
     required String password,
   }) async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
       final userCredentials = await _firebase.signInWithEmailAndPassword(
         email: email,

@@ -37,7 +37,7 @@ class _ImageInputState extends State<ImageInput> {
 
     if (pickedImage == null) {
       return;
-    } else {}
+    }
 
     setState(() {
       _selectedImage = File(pickedImage.path);
